@@ -2,6 +2,10 @@ const axios = require('axios');
 const amadeusService = require('../services/amadeus');
 const openaiService = require('../services/openai');
 
+const apiGetRequest = "/shopping/flight-offers"
+const apiSpecJson = "{\"openapi\":\"3.0.0\",\"servers\":[{\"url\":\"https:\/\/test.api.amadeus.com\/v2\"}],\"info\":{\"description\":\"\nBefore using this API, we recommend you read our **[Authorization Guide](https:\/\/developers.amadeus.com\/self-service\/apis-docs\/guides\/authorization)** for more information on how to generate an access token. \n\nPlease also be aware that our test environment is based on a subset of the production, if you are not returning any results try with big cities\/airports like LON (London) or NYC (New-York).\",\"title\":\"Flight Offers Search\",\"version\":\"2.2.0\",\"x-apisguru-categories\":[\"location\"],\"x-logo\":{\"url\":\"https:\/\/api.apis.guru\/v2\/cache\/logo\/https_amadeus.com_images_en_technology_mobile-tablet_mobile-woman-office-city.jpg.transform_medium_img.jpg\"},\"x-origin\":[{\"format\":\"swagger\",\"url\":\"https:\/\/developers.amadeus.com\/PAS-EAS\/api\/v0\/documents\/10181\/file\",\"version\":\"2.0\"}],\"x-providerName\":\"amadeus.com\",\"x-release-note\":{\"2.0.0\":[\"Initial Version\",\"Includes search and price flight offer\"],\"2.1.0\":[\"Add currencies, aircraft and carriers dictionary\"],\"2.2.0\":[\"Add maxPrice filtering\"]},\"x-status\":\"validated\",\"x-tags\":[\"#online-retail\",\"#mobile-services\",\"#ama-for-dev\"]},\"paths\":{\"\/shopping\/flight-offers\":{\"get\":{\"description\":\"\",\"operationId\":\"getFlightOffers\",\"parameters\":[{\"description\":\"city\/airport [IATA code](http:\/\/www.iata.org\/publications\/Pages\/code-search.aspx) from which the traveler will depart, e.g. BOS for Boston\",\"example\":\"SYD\",\"in\":\"query\",\"name\":\"originLocationCode\",\"required\":true,\"schema\":{\"pattern\":\"[A-Z]{3}\",\"type\":\"string\"}},{\"description\":\"city\/airport [IATA code](http:\/\/www.iata.org\/publications\/Pages\/code-search.aspx) to which the traveler is going, e.g. PAR for Paris\",\"example\":\"BKK\",\"in\":\"query\",\"name\":\"destinationLocationCode\",\"required\":true,\"schema\":{\"pattern\":\"[A-Z]{3}\",\"type\":\"string\"}},{\"description\":\"the date on which the traveler will depart from the origin to go to the destination. Dates are specified in the [ISO 8601](https:\/\/en.wikipedia.org\/wiki\/ISO_8601) YYYY-MM-DD format, e.g. 2017-12-25\",\"example\":\"2021-02-01\",\"in\":\"query\",\"name\":\"departureDate\",\"required\":true,\"schema\":{\"format\":\"date\",\"type\":\"string\"}},{\"description\":\"the date on which the traveler will depart from the destination to return to the origin. If this parameter is not specified, only one-way itineraries are found. If this parameter is specified, only round-trip itineraries are found. Dates are specified in the [ISO 8601](https:\/\/en.wikipedia.org\/wiki\/ISO_8601) YYYY-MM-DD format, e.g. 2018-02-28\",\"in\":\"query\",\"name\":\"returnDate\",\"required\":false,\"schema\":{\"format\":\"date\",\"type\":\"string\"}},{\"description\":\"the number of adult travelers (age 12 or older on date of departure).\",\"in\":\"query\",\"name\":\"adults\",\"required\":true,\"schema\":{\"default\":1,\"maximum\":9,\"minimum\":1,\"type\":\"integer\"}},{\"description\":\"the number of child travelers (older than age 2 and younger than age 12 on date of departure) who will each have their own separate seat. If specified, this number should be greater than or equal to 0\",\"in\":\"query\",\"name\":\"children\",\"required\":false,\"schema\":{\"maximum\":9,\"minimum\":0,\"type\":\"integer\"}},{\"description\":\"the number of infant travelers (whose age is less or equal to 2 on date of departure). Infants travel on the lap of an adult traveler, and thus the number of infants must not exceed the number of adults. If specified, this number should be greater than or equal to 0\",\"in\":\"query\",\"name\":\"infants\",\"required\":false,\"schema\":{\"maximum\":9,\"minimum\":0,\"type\":\"integer\"}},{\"description\":\"most of the flight time should be spent in a cabin of this quality or higher. The accepted travel class is economy, premium economy, business or first class. If no travel class is specified, the search considers any travel class\",\"in\":\"query\",\"name\":\"travelClass\",\"required\":false,\"schema\":{\"enum\":[\"ECONOMY\",\"PREMIUM_ECONOMY\",\"BUSINESS\",\"FIRST\"],\"type\":\"string\"}},{\"description\":\"This option ensures that the system will only consider these airlines. This can not be cumulated with parameter excludedAirlineCodes.\n\nAirlines are specified as [IATA airline codes](http:\/\/www.iata.org\/publications\/Pages\/code-search.aspx) and are comma-separated, e.g. 6X,7X,8X\n\",\"explode\":false,\"in\":\"query\",\"name\":\"includedAirlineCodes\",\"required\":false,\"schema\":{\"pattern\":\"[0-9A-Z]{2}\",\"type\":\"string\"},\"style\":\"form\"},{\"description\":\"This option ensures that the system will ignore these airlines. This can not be cumulated with parameter includedAirlineCodes.\n\nAirlines are specified as [IATA airline codes](http:\/\/www.iata.org\/publications\/Pages\/code-search.aspx) and are comma-separated, e.g. 6X,7X,8X\n\",\"explode\":false,\"in\":\"query\",\"name\":\"excludedAirlineCodes\",\"required\":false,\"schema\":{\"pattern\":\"[0-9A-Z]{2}\",\"type\":\"string\"},\"style\":\"form\"},{\"description\":\"if set to true, the search will find only flights going from the origin to the destination with no stop in between\",\"in\":\"query\",\"name\":\"nonStop\",\"required\":false,\"schema\":{\"default\":false,\"type\":\"boolean\"}},{\"description\":\"the preferred currency for the flight offers. Currency is specified in the [ISO 4217](https:\/\/en.wikipedia.org\/wiki\/ISO_4217) format, e.g. EUR for Euro\",\"in\":\"query\",\"name\":\"currencyCode\",\"required\":false,\"schema\":{\"pattern\":\"[A-Z]{3}\",\"type\":\"string\"}},{\"description\":\"maximum price per traveler. By default, no limit is applied. If specified, the value should be a positive number with no decimals\",\"in\":\"query\",\"name\":\"maxPrice\",\"required\":false,\"schema\":{\"minimum\":1,\"type\":\"integer\"}},{\"description\":\"maximum number of flight offers to return. If specified, the value should be greater than or equal to 1\",\"in\":\"query\",\"name\":\"max\",\"required\":false,\"schema\":{\"default\":250,\"minimum\":1,\"type\":\"integer\"}}],\"responses\":{\"200\":{\"$ref\":\"#\/components\/responses\/GETAirOffersReply\"},\"400\":{\"$ref\":\"#\/components\/responses\/400_Search\"},\"default\":{\"$ref\":\"#\/components\/responses\/500\"}},\"summary\":\"Return list of Flight Offers based on searching criteria.\",\"tags\":[\"Shopping\"]}}}}"
+const numInputs = 5
+
 describe('API tests', () => {
     it('should return a successful response', async () => {
         const response = await axios.get('http://localhost:3000');
@@ -9,11 +13,25 @@ describe('API tests', () => {
     });
 });
 
-describe('Flight Offers Search', async () => {
-    const response = await openaiService.parametersExtraction(request, json, numInputs);
-    test.each(response.data)
-        ('should return a list of flights', async (data) => {
-            const result = await amadeusService.searchFlights(data);
-            expect(result.status).toBe(200);
-        }, 10000);
+describe('Flight Offers Search', () => {
+    let data = [];
+
+    beforeAll(async () => {
+        response = await openaiService.parametersExtraction(apiGetRequest, apiSpecJson, numInputs);
+        let gptResponse = response.content;
+        data = JSON.parse(gptResponse);
+        console.log(data);
+    }, 20000);
+
+    it('should return a list of flights for each input data', async () => {
+        const results = (data) => data.map(async (dataItem) => {
+            const result = await amadeusService.searchFlights(dataItem);
+            if (result.status === 200) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        expect(results).not.toContain(false);
+    }, 10000);
 });
