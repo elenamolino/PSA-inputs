@@ -21,7 +21,6 @@ const parametersExtraction = async (request, json, numInputs) => {
     );
 
     const response = completion.data.choices[0].message;
-    console.log(response);
     return response;
 }
 

@@ -7,7 +7,7 @@ const getAccessToken = async () => {
     };
     try {
         const response = await axios.post(url, "grant_type=client_credentials&client_id=3GdKBYuoHqAXgb8kGynA36S6bfX8vVhh&client_secret=rFvcX0nA7o0rnAUm", { headers });
-        return response;
+        return response.data.access_token;
     }
     catch (error) {
         console.log(error);
@@ -21,7 +21,10 @@ const searchFlights = async (data) => {
         'Authorization': 'Bearer ' + accessToken
     }
     try {
-        const response = await axios.post(url, { params: data }, { headers });
+        const response = await axios.get(url, {
+            params: data,
+            headers: headers
+          });
         return response;
     } catch (error) {
         console.log(error);
@@ -31,5 +34,6 @@ const searchFlights = async (data) => {
 
 
 module.exports = {
+    getAccessToken,
     searchFlights
 }
