@@ -31,9 +31,26 @@ const searchFlights = async (data) => {
     }
 };
 
+const searchCity = async (data) => {
+    const accessToken = await getAccessToken();
+    const url = 'https://test.api.amadeus.com/v1/reference-data/locations/cities';
+    const headers = {
+        'Authorization': 'Bearer ' + accessToken
+    }
+    try {
+        const response = await axios.get(url, {
+            params: data,
+            headers: headers
+            });
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 
 module.exports = {
     getAccessToken,
-    searchFlights
+    searchFlights,
+    searchCity
 }
