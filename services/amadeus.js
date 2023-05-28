@@ -48,9 +48,23 @@ const searchCity = async (data) => {
     }
 };
 
+const searchFlightsPosted = async (data) => {
+    const accessToken = await getAccessToken();
+    const url = 'https://test.api.amadeus.com/v2/shopping/flight-offers';
+    const headers = data.headers
+    headers['Authorization'] = 'Bearer ' + accessToken
+    console.log(headers)
+    try {
+        const response = await axios.post(url, data.body , headers);
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 module.exports = {
     getAccessToken,
     searchFlights,
-    searchCity
+    searchCity,
+    searchFlightsPosted
 }

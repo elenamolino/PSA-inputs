@@ -19,7 +19,6 @@ router.post('/inputs-post', async (req, res) => {
     const { request, json, numInputs } = req.body;
     const response = await openaiService.postRequestParams(request, json, numInputs);
 
-    console.log(response);
     let gptResponse = response.content;
     gptResponse = JSON.parse(gptResponse);
     res.status(200).send({
