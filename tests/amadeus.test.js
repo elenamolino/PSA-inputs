@@ -21,7 +21,7 @@ describe('Flight Offers Search', () => {
     let data = [];
 
     beforeAll(async () => {
-        response = await openaiService.parametersExtraction(apiGetRequest1, apiSpecJson1, numInputs1);
+        response = await openaiService.getRequestParams(apiGetRequest1, apiSpecJson1, numInputs1);
         let gptResponse = response.content;
         data = JSON.parse(gptResponse);
     }, 20000);
@@ -43,7 +43,7 @@ describe('City Search', () => {
     let data = [];
 
     beforeAll(async () => {
-        response = await openaiService.parametersExtraction(apiGetRequest2, apiSpecJson2, numInputs2);
+        response = await openaiService.getRequestParams(apiGetRequest2, apiSpecJson2, numInputs2);
         let gptResponse = response.content;
         data = JSON.parse(gptResponse);
         console.log(data);
